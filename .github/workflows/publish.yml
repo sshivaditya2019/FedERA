@@ -28,7 +28,7 @@ jobs:
       - name: Copy README to Docker image
         run: |
           docker create --name temp_container shivadityas/federa:latest
-          docker cp temp_container:/path/to/README .
+          docker cp temp_container:README.md .
           docker rm temp_container
 
       - name: Push Docker image to Docker Hub
