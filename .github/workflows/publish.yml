@@ -36,3 +36,10 @@ jobs:
         run: |
           docker push shivadityas/federa:latest
           docker push shivadityas/federa:${{ github.sha }}
+
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v3
+        with:
+          username: $DOCKER_HUB_USERNAME
+          password: $DOCKER_HUB_PASSWORD
+          repository: shivadityas/federa
