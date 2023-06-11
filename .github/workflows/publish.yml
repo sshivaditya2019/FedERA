@@ -1,18 +1,31 @@
-name: publish
-on: [push]
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOCKER_HUB_USERNAME: shivadityas
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
 jobs:
-  publish-hello-docker-image:
+  build-and-push:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Login to GitHub Container Registry
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build the hello-docker Docker image
-      run: |
-            docker build . --tag ghcr.io/sshivaditya/federa:latest
-            docker run ghcr.io/sshivaditya/federa:latest
-            docker push ghcr.io/sshivaditya/sshivaditya:latest
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+
+      - name: Build and tag Docker image
+        run: |
+          docker build -t your_dockerhub_username/your_image_name:latest .
+          docker tag your_dockerhub_username/your_image_name:latest your_dockerhub_username/your_image_name:${{ github.sha }}
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push your_dockerhub_username/your_image_name:latest
+          docker push your_dockerhub_username/your_image_name:${{ github.sha }}
