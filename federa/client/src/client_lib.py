@@ -10,6 +10,9 @@ from .net_lib import test_model, load_data
 from .net_lib import train_model, train_fedavg, train_scaffold, train_mimelite, train_mime, train_feddyn
 from torch.utils.data import DataLoader
 from .get_data import get_data
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 from .ClientConnection_pb2 import  EvalResponse, TrainResponse
 
@@ -116,6 +119,8 @@ def train(train_order_message, device):
         responseDict = response_dict_bytes)
 
     save_model_state(model)
+    if carbon_tracker==1:
+        plot_emission()
     return train_response_message
 
 #replace current model with the model provided
@@ -134,3 +139,11 @@ def save_model_state(model):
     filepath = f"{save_dir_path}/model_{file_num}.pt"
     state_dict = model.state_dict()
     torch.save(state_dict, filepath)
+    
+#save plot for communication round-wise carbon emmision
+def plot_emission():
+    data = pd.read_csv(f"{save_dir_path}/emissions.csv")
+    plt.plot(np.arange(len(data.index)),data['emissions']*1000)
+    plt.xlabel('Communication Rounds')
+    plt.ylabel('Carbon Emmision (gm)')
+    plt.savefig(f"{save_dir_path}/emissions.png")

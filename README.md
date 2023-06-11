@@ -1,9 +1,13 @@
 # Federated Learning Framework
 
 [![Documentation Status](https://readthedocs.org/projects/federa/badge/?version=latest)](https://federa.readthedocs.io/en/latest/?badge=latest)
-[![License](./media/license.svg)](https://opensource.org/licenses/Apache-2.0)
-[![Ubuntu CI status](https://github.com/anupam-kliv/fl_framework_initial/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/anupam-kliv/fl_framework_initial/actions/workflows/ubuntu.yml)
-[![Windows CI status](https://github.com/anupam-kliv/fl_framework_initial/actions/workflows/windows.yml/badge.svg)](https://github.com/anupam-kliv/fl_framework_initial/actions/workflows/windows.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Ubuntu (latest)](https://github.com/anupamkliv/FedERA/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/anupamkliv/FedERA/actions/workflows/ubuntu.yml)
+[![Windows (latest)](https://github.com/anupamkliv/FedERA/actions/workflows/windows.yml/badge.svg)](https://github.com/anupamkliv/FedERA/actions/workflows/windows.yml)
+[![coveralls](https://coveralls.io/repos/github/anupamkliv/FedERA/badge.svg?branch=main)](https://coveralls.io/github/anupamkliv/FedERA?branch=main)
+[![codecov](https://codecov.io/github/Kasliwal17/FedERA/branch/main/graph/badge.svg?token=0U0pz1YIu7)](https://codecov.io/github/Kasliwal17/FedERA)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+[![linting: pylint](https://img.shields.io/badge/linting-pylint-yellowgreen)](https://github.com/pylint-dev/pylint)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/7362/badge)](https://bestpractices.coreinfrastructure.org/projects/7362)
 
 `FedERA` is a highly dynamic and customizable framework that can accommodate many use cases with flexibility by implementing several functionalities over different federated learning algorithms, and essentially creating a plug-and-play architecture to accommodate different use cases.
@@ -29,11 +33,11 @@ $ cd FedERA
 $ pip install -r requirements.txt
 ```
 
-<!-- - Install the stable version (old version) via pip:
+- Install the stable version (old version) via pip:
 ```
-# assign the version federa==1.1.2
+# assign the version federa==1.0.0
 $ pip install federa
-``` -->
+```
 
 ## Documentation
 
@@ -50,7 +54,7 @@ Website documentation has been made availbale for `FedERA`. Please visit [FedERA
 ```
 python -m federa.server.start_server \
  --algorithm fedavg \
- --clients 2 \
+ --clients 1 \
  --rounds 10 \
  --epochs 10 \
  --batch_size 10 \
@@ -109,10 +113,11 @@ docker run federa
 
 | Argument   | Description                                                  | Default |
 | ---------- | ------------------------------------------------------------ | ------- |
-| server_ip  | specifies server IP address                                 | localhost:8214 |
-| device     | specifies device                                            | cpu     |
-| encryption | specifies whether to use ssl encryption or not              | 0       |
+| server_ip  | specifies server IP address                                  | localhost:8214 |
+| device     | specifies device                                             | cpu     |
+| encryption | specifies whether to use ssl encryption or not               | 0       |
 | ca         | specifies path to CA certificate                             | ca.pem|
+| wait_time  | specifies time to wait before reconnecting to server           | 30      |
 
 ## Architecture
 Files architecture of `FedERA`. These contents may be helpful for users to understand our repo.
@@ -148,14 +153,13 @@ FedERA
 └── test
     ├── misc
     ├── benchtest
-    |   ├── test_algorithms
-    |   ├── test_datasets
-    |   ├── test_models
-    |   ├── test_modules
     |   ├── test_results
     |   └── test_scalability
     └──unittest
-        └── test_algorithms
+        ├── test_algorithms
+        ├── test_datasets
+        ├── test_models
+        └── test_modules
         
 ```
 
@@ -168,14 +172,13 @@ FedERA
 
 ## Running tests
 
-Various unit tests are available in the `test` directory. To run any tests, run the following command from the root directory:
+Various unit tests and bench tests are available in the `test` directory. To run any tests, run the following command from the root directory:
 
 ```
-python -m test.benchtest.test_algorithms
-python -m test.benchtest.test_datasets
-python -m test.benchtest.test_models
-python -m test.benchtest.test_modules
-python -m test.benchtest.test_scalability
+python -m test.unittest.test_algorithms
+python -m test.unittest.test_datasets
+python -m test.unittest.test_models
+python -m test.unittest.test_modules
 ```
 
 ## Federated Learning Algorithms
@@ -251,7 +254,8 @@ Each client has same number of samples, and same distribution for all class samp
 
 ### Custom Dataset Support
 
-We also provide a simple way to add your own dataset to the framework. Look into [docs](https://federa.readthedocs.io/en/latest/tutorials/dataset.html#adding-support-for-new-datasets) for more details.
+We also provide a simple way to add your own dataset to the framework. The models employed in this framework were trained using a limited subset of the publicly accessible benchmark dataset MedMNIST v2 [(link)](https://medmnist.com/). We specifically selected four different medical image classes from this dataset, which include breast ultrasound (US), chest X-ray, retinal optical coherence tomography (OCT), and tissue microscopy. Each image within the dataset possesses dimensions of 28x28 pixels.
+For the framework's implementation, we utilized this custom dataset for both the side server and the client.   Look into [docs](https://federa.readthedocs.io/en/latest/tutorials/dataset.html#adding-support-for-new-datasets) for more details.
 
 ## Models Supported
 
@@ -280,7 +284,7 @@ In `FedERA` CodeCarbon[[1]](#1)  package is used to estimate the carbon emission
 ---
 
 ## Performance Evaluation under different Non-IID setting
-
+<!--
 The `accuracy.py`  file has functions defined needed to plot all the graphs show in this section.
 
 ### Accuracy of various FL algorithms available in the framework with a few dataset
@@ -433,14 +437,14 @@ The `accuracy.py`  file has functions defined needed to plot all the graphs show
     </tbody>
 </table>
 </div>
-
+-->
 ### Plotting the accuracy of some algorithms against different Non-IID distributions
 
 <div align="left">
   <img src="media/accuracy/Al_0.png" width="230" />
   <img src="media/accuracy/Al_1.png" width="230" /> 
   <img src="media/accuracy/Al_3.png" width="230" />
-  <img src="media/accuracy/Al_4.png" width="230" />
+  <!-- <img src="media/accuracy/Al_4.png" width="230" /> -->
 </div>
 
 ### Plotting accuracy on Non-IID distribution with different algorithms
@@ -449,7 +453,7 @@ The `accuracy.py`  file has functions defined needed to plot all the graphs show
   <img src="media/accuracy/niid_1.png" width="220" />
   <img src="media/accuracy/niid_2.png" width="220" />
   <img src="media/accuracy/niid_3.png" width="220" />
-  <img src="media/accuracy/niid_4.png" width="220" />
+  <!-- <img src="media/accuracy/niid_4.png" width="220" /> -->
 </div>
 <br/>
 
@@ -459,7 +463,7 @@ The `accuracy.py`  file has functions defined needed to plot all the graphs show
 <div align="center">
   <img width="40%" alt="" src="media/accuracy/Accuracy.png" >
 </div>
-
+ 
 <!-- ## References
 
 <a id="1">[1]</a> Schmidt, V., Goyal, K., Joshi, A., Feld, B., Conell, L., Laskaris, N., Blank, D., Wilson, J., Friedler, S., & Luccioni, S. (2021). CodeCarbon: Estimate and Track Carbon Emissions from Machine Learning Computing. https://doi.org/10.5281/zenodo.4658424
@@ -468,8 +472,47 @@ The `accuracy.py`  file has functions defined needed to plot all the graphs show
 
 ## Contact
 
-Project Investigator: [Prof. ](https://scholar.google.com/citations?user=gF0H9nEAAAAJ&hl=ennjujbj) (abc@edu).
+<!-- Project Investigator: [Prof. ](https://scholar.google.com/citations?user=gF0H9nEAAAAJ&hl=ennjujbj) (abc@edu).
 
 For technical issues related to __**FedERA**__ development, please contact our development team through Github issues or email:
 
-- [Name Sirname](https://scholar.google.com/citations___): _____@gmail.com
+- [Name Sirname](https://scholar.google.com/citations___): _____@gmail.com -->
+
+For technical issues related to __**FedERA**__ development, please contact our development team through Github issues or email:
+
+**Principal Investigator**
+
+
+
+<a href="https://www.linkedin.com/in/debdoot/">Dr Debdoot Sheet</a> </br>
+Department of Electrical Engineering,</br>
+Indian Institute of Technology Kharagpur</br>
+email: debdoot@ee.iitkgp.ac.in, 
+
+
+**Contributor**
+
+<a href="https://in.linkedin.com/in/anupam-borthakur-b85000185/">Anupam Borthakur</a> </br>
+Centre of Excellence in Artificial Intelligence, </br>
+Indian Institute of Technology Kharagpur </br>
+email: anupamborthakur@kgpian.iitkgp.ac.in </br>
+Github username: anupam-kliv
+
+<a href="https://www.linkedin.com/in/asimmanna17/">Asim Manna</a> </br>
+Centre of Excellence in Artificial Intelligence, </br>
+Indian Institute of Technology Kharagpur </br>
+email: asimmanna17@kgpian.iitkgp.ac.in </br> 
+Github username: asimmanna17
+
+
+<a href="https://www.linkedin.com/in/aditya-kasliwal-982525227"> Aditya Kasliwal</a></br>
+Manipal Institute of Technology</br>
+email: kasliwaladitya17@gmail.com </br>
+Github username: Kasliwal17
+
+<a href="https://www.linkedin.com/in/dipayan-dewan-aabb8a79/">Dipayan Dewan</a> </br>
+Centre of Excellence in Artificial Intelligence, </br>
+Indian Institute of Technology Kharagpur </br>
+email: diipayan93@kgpian.iitkgp.ac.in </br> 
+Github username: dipayandewan94
+ 
