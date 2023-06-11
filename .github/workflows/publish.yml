@@ -22,10 +22,16 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t your_dockerhub_username/your_image_name:latest .
-          docker tag your_dockerhub_username/your_image_name:latest your_dockerhub_username/your_image_name:${{ github.sha }}
+          docker build -t shivadityas/federa:latest .
+          docker tag shivadityas/federa:latest shivadityas/federa:${{ github.sha }}
+
+      - name: Copy README to Docker image
+        run: |
+          docker create --name temp_container shivadityas/federa:latest
+          docker cp temp_container:/path/to/README .
+          docker rm temp_container
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push your_dockerhub_username/your_image_name:latest
-          docker push your_dockerhub_username/your_image_name:${{ github.sha }}
+          docker push shivadityas/federa:latest
+          docker push shivadityas/federa:${{ github.sha }}
